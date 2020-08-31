@@ -16,28 +16,32 @@ app.post('/user',(req,res)=>{
 
     const user = req.body.user
     if(!user) return res.status(400).json({success:false, error:'no user'})
-    User.create({name:user})
-    .then(u=>{
-        Message.create({user:u._id, message:[]})
-        console.log('created user ' + u)
-    })
-    .catch(e=>console.log(e))
+    Message.create({message:[]})
+    .then(m=>
+        User.create({name:user, messages:m._id})
+        .then(u=>console.log(u))
+        .catch(e=>console.log(e))
+        ).catch(e=>console.log(e))
 })
 
-app.post('/message', (req,res)=>{
-    const user = req.body.user
-    const message = req.body.message
+app.post('/message', async (req,res)=>{
+    try{
+        const user = await req.body.user
+        const message = await req.body.message
 
-    if(!user) return res.status(400).json({success:false, error:'no user'})
-    if(!message) return res.status(400).json({success:false, error:'no message'})
+        if(!user) return res.status(400).json({success:false, error:'no user'})
+        if(!message) return res.status(400).json({success:false, error:'no message'})
+
+        const u = await User.findOne({name:user})
+        
+        console.log(await Message.findByIdAndUpdate({_id:u.messages}, {$push:{message:message}}, {new:true}))
+
     
- 
-        Message.find()
-        .populate({path:'user', match: {name:user}})
-        .then(m=>console.log(m))
-        .catch(e=>console.log(e))
-  
-    
+    }
+    catch(e){
+        console.log(e)
+    }
+   
 })
 
 

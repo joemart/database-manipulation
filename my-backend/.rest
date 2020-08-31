@@ -2,7 +2,7 @@ POST http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "user":"Dog"
+    "user":"Joe"
 }
 
 ###
@@ -11,6 +11,6 @@ POST http://localhost:3000/message
 Content-Type: application/json
 
 {
-    "user":"Dog",
+    "user":"Joe",
     "message":"Hello"
 }
